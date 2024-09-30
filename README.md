@@ -1,5 +1,6 @@
 Este repositório é usado para praticar comandos básicos do Git, como clonar, criar branches, fazer commits e enviar alterações.
 Comandos usados:
+git status
 git clone
 git branch
 git add
