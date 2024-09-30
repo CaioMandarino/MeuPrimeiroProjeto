@@ -1,1 +1,1 @@
-Teste dos comandos github
+Teste dos comandos do git
