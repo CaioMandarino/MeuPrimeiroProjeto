@@ -129,28 +129,82 @@ int main() {
     int opcao;
     No *topo = NULL;
     Cadastro dados;
-
-    do {
-        printf("\n\n\tDigite:\n\t0 Para sair\n\t1 Para Inserir\n\t2 Para Remover\n\t3 Para Imprimir\n");
-        scanf("%d", &opcao);
-        switch(opcao) {
-            case 0:
-                printf("Encerrando Programa...");
-                break;
-            case 1: 
-                ler_cadastro(&dados);
-                entrar_fila_Prioridade(&topo, dados);
-                break;
-            case 2: 
-                remover_fila(&topo);
-                break;
-            case 3:
-                imprimir(&topo);
-                break;
-            default:
-                printf("Opcao invalida!\n");
-        }
-    } while (opcao != 0);
+	FILE *arq;
+	char usuario[30], senha[30], conferir[30];
+	char nomeParaArq[54];
+	char resp;
+	int registro, tamanho;
+	do {		
+		printf("Vc ja esta registrado? [1] para Sim e [2] para Nao: ");
+		scanf("%d", &registro);
+		switch(registro){
+			case 1 :
+				printf("Qual seu usuario: ");
+				scanf("%s", usuario);
+				getchar();
+				strcat(usuario, ".bin");
+				arq = fopen(usuario, "rb");
+				if (arq == NULL){
+					printf("\nUsuario nao encontrado\n");
+					break;
+				}
+				printf("Qual sua senha: ");
+				fgets(senha, 30, stdin);
+				fread(&conferir, sizeof(conferir), 30, arq);
+				
+					if (strcmp(conferir, senha) == 0){
+						printf("Login realizado com sucesso!\n");
+						do {
+							printf("\n\n\tDigite:\n\t0 Para sair\n\t1 Para Inserir\n\t2 Para Remover\n\t3 Para Imprimir\n");
+							scanf("%d", &opcao);
+							switch(opcao) {
+								case 0:
+									printf("Encerrando Programa...");
+									break;
+								case 1: 
+									ler_cadastro(&dados);
+									entrar_fila_Prioridade(&topo, dados);
+									break;
+								case 2: 
+									remover_fila(&topo);
+									break;
+								case 3:
+									imprimir(&topo);
+									break;
+								default:
+									printf("Opcao invalida!\n");
+							}
+						} while (opcao != 0);
+					}
+					else {
+						printf("\nErro senha incorreta\n");
+					}
+					fclose(arq);	
+				
+				break;	
+			case 2 :
+				printf("Escolha um nome de usuario: ");
+				scanf("%s", usuario);
+				getchar();
+				printf("Escolha uma senha: ");
+				fgets(senha, 30, stdin);
+				strcat(usuario, ".bin");
+				arq = fopen(usuario, "wb");
+				if (arq == NULL){
+					printf("Erro ao abrir o arquivo");
+					return 1;
+				}
+				tamanho = strlen(senha);
+				fwrite(senha, sizeof(char), tamanho, arq);
+				fclose(arq);
+				break;
+			default :
+				printf("Digite um valor que seja 1 ou 2\n");
+		}
+		printf("Quer fechar o programa? [S] / [N]");
+		scanf(" %c", &resp);
+	} while (resp == 'N');
     
     return 0;
 }
+
